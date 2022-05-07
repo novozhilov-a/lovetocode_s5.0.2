@@ -4,7 +4,25 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.IOException;
+import java.util.logging.LogManager;
+
 public class MyAppSpring {
+    static {
+        String configPath = MyAppSpring.class
+                .getClassLoader()
+                .getResource("logging.properties")
+                .getFile();
+        configPath = configPath.replace("%20", " ");
+        System.setProperty("java.util.logging.config.file", configPath);
+        //init JUL with logging.properties
+        try {
+            LogManager.getLogManager().readConfiguration();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static final Log log = LogFactory.getLog(MyAppSpring.class);
 
     public static void main(String[] args) throws InterruptedException {
